@@ -54,6 +54,15 @@ function reducer(state, { type, payload, previous }) {
         second: "",
         operator: "",
       };
+    case ".":
+      if (state.first.includes(".")) {
+        return state;
+      } else {
+        return {
+          ...state,
+          first: previous.toString() + payload.toString(),
+        };
+      }
     default:
       return initialState;
   }
@@ -80,7 +89,13 @@ function App() {
         <NumButton dispatch={dispatch} num={8} prev={state.first}></NumButton>
         <NumButton dispatch={dispatch} num={9} prev={state.first}></NumButton>
         <NumButton dispatch={dispatch} num={0} prev={state.first}></NumButton>
-        <button>.</button>
+        <button
+          onClick={() =>
+            dispatch({ type: ".", payload: ".", previous: state.first })
+          }
+        >
+          .
+        </button>
         <button onClick={() => dispatch({ type: "eval" })}>=</button>
         <button className="span2row" onClick={() => dispatch({ type: "ac" })}>
           AC
