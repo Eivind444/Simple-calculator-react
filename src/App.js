@@ -1,20 +1,22 @@
 import "./App.css";
 import React, { useReducer } from "react";
+import NumButton from "./components/NumButton";
+import OpButton from "./components/OpButton";
 
 const initialState = { first: "", second: "", operator: "" };
 
-function reducer(state, { type, payload, previous }) {
+function reducer(state, { type, payload }) {
   switch (type) {
     case "number":
       return {
         ...state,
-        first: previous.toString() + payload.toString(),
+        first: state.first.toString() + payload.toString(),
       };
     case "operator":
       return {
         ...state,
         first: "",
-        second: previous,
+        second: state.first,
         operator: payload,
       };
     case "eval":
@@ -60,7 +62,7 @@ function reducer(state, { type, payload, previous }) {
       } else {
         return {
           ...state,
-          first: previous.toString() + payload.toString(),
+          first: state.first.toString() + payload.toString(),
         };
       }
     default:
@@ -70,6 +72,8 @@ function reducer(state, { type, payload, previous }) {
 
 function App() {
   const [state, dispatch] = useReducer(reducer, initialState);
+  const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
+  const operators = ["x", "/", "-", "+"];
 
   return (
     <div className="wrapper">
@@ -79,16 +83,9 @@ function App() {
           <h4>{state.operator}</h4>
           <h3>{state.first}</h3>
         </div>
-        <NumButton dispatch={dispatch} num={1} prev={state.first}></NumButton>
-        <NumButton dispatch={dispatch} num={2} prev={state.first}></NumButton>
-        <NumButton dispatch={dispatch} num={3} prev={state.first}></NumButton>
-        <NumButton dispatch={dispatch} num={4} prev={state.first}></NumButton>
-        <NumButton dispatch={dispatch} num={5} prev={state.first}></NumButton>
-        <NumButton dispatch={dispatch} num={6} prev={state.first}></NumButton>
-        <NumButton dispatch={dispatch} num={7} prev={state.first}></NumButton>
-        <NumButton dispatch={dispatch} num={8} prev={state.first}></NumButton>
-        <NumButton dispatch={dispatch} num={9} prev={state.first}></NumButton>
-        <NumButton dispatch={dispatch} num={0} prev={state.first}></NumButton>
+        {numbers.map((number) => {
+          return <NumButton dispatch={dispatch} num={number}></NumButton>;
+        })}
         <button
           onClick={() =>
             dispatch({ type: ".", payload: ".", previous: state.first })
@@ -100,47 +97,12 @@ function App() {
         <button className="span2row" onClick={() => dispatch({ type: "ac" })}>
           AC
         </button>
-        <button
-          onClick={() =>
-            dispatch({ type: "operator", payload: "x", previous: state.first })
-          }
-        >
-          x
-        </button>
-        <button
-          onClick={() =>
-            dispatch({ type: "operator", payload: "/", previous: state.first })
-          }
-        >
-          /
-        </button>
-        <button
-          onClick={() =>
-            dispatch({ type: "operator", payload: "-", previous: state.first })
-          }
-        >
-          -
-        </button>
-        <button
-          onClick={() =>
-            dispatch({ type: "operator", payload: "+", previous: state.first })
-          }
-        >
-          +
-        </button>
+        {operators.map((operator) => {
+          return <OpButton dispatch={dispatch} operator={operator}></OpButton>;
+        })}
       </div>
     </div>
   );
 }
 
 export default App;
-
-function NumButton({ dispatch, num, prev }) {
-  return (
-    <button
-      onClick={() => dispatch({ type: "number", payload: num, previous: prev })}
-    >
-      {num}
-    </button>
-  );
-}
