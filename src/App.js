@@ -13,6 +13,23 @@ function reducer(state, { type, payload }) {
         first: state.first.toString() + payload.toString(),
       };
     case "operator":
+      if (state.first && state.operator && state.second) {
+        let result = reducer(state, { type: "eval", payload: state.operator });
+        return {
+          ...result,
+          second: result.first,
+          first: "",
+          operator: state.operator,
+        };
+      }
+      if (state.operator) {
+        return {
+          ...state,
+          first: "",
+          second: state.second,
+          operator: payload,
+        };
+      }
       return {
         ...state,
         first: "",
