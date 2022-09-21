@@ -19,7 +19,7 @@ function reducer(state, { type, payload }) {
           ...result,
           second: result.first,
           first: "",
-          operator: state.operator,
+          operator: payload,
         };
       }
       if (state.operator) {
